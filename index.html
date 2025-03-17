@@ -47,7 +47,14 @@
           $el.querySelector('.float-right.color-fg-muted.d-flex.flex-items-center').remove();
           $el.querySelectorAll('span.sr-only').forEach((queryEl) => {
             queryEl.remove();
-          })
+          });
+
+          if(!showAxis){
+            $el.querySelector('thead').remove();
+            $el.querySelectorAll('td.ContributionCalendar-label').forEach((queryEl) => {
+              queryEl.remove();
+            });
+          }
 
           return $el.innerHTML;
         } catch (e){
@@ -63,6 +70,9 @@
     };
 
     const url = `./contributions.php?username=${BrowserUtil.getURLParam('username')}`;
+    const username = BrowserUtil.getURLParam('username');
+    const showAxis = BrowserUtil.getURLParam('axis') ? 
+                     BrowserUtil.getURLParam('axis').toLowerCase() === 'true' : true;
     const $container = document.querySelector('.ghwrap-container');
 
     const graphHTMLStr = await API.getGraphHTMLStr();
