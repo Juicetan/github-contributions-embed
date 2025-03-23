@@ -22,6 +22,13 @@
         top: --tooltip-top !important;
       }
     }
+    .ghwrap-container{
+      &.dark{
+        .ContributionCalendar-day[data-level="0"]{
+          opacity: 0.1;
+        }
+      }
+    }
   </style>
 </head>
 <body>
@@ -104,7 +111,7 @@
       });
     }
 
-    const url = `./contributions.php?username=${BrowserUtil.getURLParam('username')}`;
+    const url = `https://contributions.okcode.club/contributions.php?username=${BrowserUtil.getURLParam('username')}`;
     const username = BrowserUtil.getURLParam('username');
     const showAxis = BrowserUtil.getURLParam('axis') ? 
                      BrowserUtil.getURLParam('axis').toLowerCase() === 'true' : true;
@@ -117,6 +124,11 @@
       $calDay.addEventListener('mouseover', handleTooltip)
       $calDay.addEventListener('mouseout', hideTooltip);
     });
+
+    const darkMode = BrowserUtil.getURLParam('dark') === 'true';
+    if(darkMode){
+      $container.classList.add('dark');
+    }
   </script>
 </body>
 </html>
