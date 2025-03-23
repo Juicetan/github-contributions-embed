@@ -42,6 +42,8 @@ libxml_clear_errors();
 $xpath = new DOMXPath($dom);
 $elements = $xpath->query("//*[@class='border py-2 graph-before-activity-overview']");
 
+header('Access-Control-Allow-Origin: *');
+
 if ($elements->length === 0) {
   echo "No element contributions found.";
 } else {
