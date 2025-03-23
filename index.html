@@ -13,6 +13,14 @@
     }
     .ContributionCalendar-grid{
       min-width: 100%;
+      tool-tip.sr-only.position-absolute{
+        position: absolute!important;
+        --tooltip-top: calc(var(--tool-tip-position-top, 0) - var(--overlay-offset, 0.25rem));
+        --tooltip-left: var(--tool-tip-position-left);
+        inset: var(--tooltip-top) auto auto var(--tooltip-left) !important;
+        left: --tooltip-left !important;
+        top: --tooltip-top !important;
+      }
     }
   </style>
 </head>
@@ -64,10 +72,37 @@
       }
     }
 
-    const handleTooltip = function(evt){
-      console.log('>', evt);
+    const handleTooltip = async function(evt){
+      const id = evt.target.getAttribute('id');
+      const $tooltip = document.querySelector(`tool-tip[for="${id}"]`)
+      $tooltip.style.transform = '';
+      $tooltip.showPopover();
+      const curTooltipPos = $tooltip.getBoundingClientRect();
+      const curWindowDim = {
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+      
+      let newPos = {
+        x: evt.clientX - curTooltipPos.x + 10,
+        y: evt.clientY - curTooltipPos.y + 10
+      };
 
+      if(evt.clientY >= (curWindowDim.height - 40)){
+        newPos.y = newPos.y - (curTooltipPos.height + 10)
+      }
+
+      if((evt.clientX + curTooltipPos.width) >= curWindowDim.width){
+        newPos.x = newPos.x - curTooltipPos.width - 15;
+      }
+
+      $tooltip.style.transform = `translate(${newPos.x}px,${newPos.y}px)`;
     };
+    const hideTooltip = function(evt){
+      document.querySelectorAll('tool-tip').forEach((queryEl) => {
+        queryEl.hidePopover();
+      });
+    }
 
     const url = `./contributions.php?username=${BrowserUtil.getURLParam('username')}`;
     const username = BrowserUtil.getURLParam('username');
@@ -80,6 +115,7 @@
 
     $container.querySelectorAll('td.ContributionCalendar-day').forEach(($calDay) => {
       $calDay.addEventListener('mouseover', handleTooltip)
+      $calDay.addEventListener('mouseout', hideTooltip);
     });
   </script>
 </body>
