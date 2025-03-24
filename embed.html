@@ -96,6 +96,10 @@
         .ContributionCalendar-day[data-level="0"]{
           opacity: 0.1;
         }
+        td.ContributionCalendar-label,thead{
+          color: white;
+        }
+        
         .loader{
           mask: conic-gradient(#000 0 0) content-box exclude,conic-gradient(#000 0 0);
           &:before{
@@ -308,7 +312,7 @@
     }
     
     
-    const url = `https://contributions.okcode.club/contributions.php?username=${BrowserUtil.getURLParam('username')}`;
+    const url = `https://contributions.okcode.club/contributions.php?username=${BrowserUtil.getURLParam('username') || 'yyx990803'}`;
     const username = BrowserUtil.getURLParam('username');
     const showAxis = BrowserUtil.getURLParam('axis') ? 
     BrowserUtil.getURLParam('axis').toLowerCase() === 'true' : true;
