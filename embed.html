@@ -10,6 +10,16 @@
       margin: 0;
       padding: 0;
       background: transparent;
+      overflow-y: hidden;
+    }
+    .ContributionCalendar{
+      > div{
+        padding: 0 20px;
+        &::-webkit-scrollbar{
+          height: 0;
+          width: 0;
+        }
+      }
     }
     .ContributionCalendar-grid{
       min-width: 100%;
@@ -23,6 +33,34 @@
       }
     }
     .ghwrap-container{
+      position: relative;
+      .scroll-con{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(255,255,255,0.4);
+        cursor: pointer;
+        user-select: none;
+        color: black;
+        font-weight: bold;
+        font-size: 20px;
+        &:hover{
+          background-color: rgba(255,255,255,0.7);
+        }
+        &:active{
+          background-color: rgba(255,255,255,0.8);
+        }
+        &.forward{
+          right: 0;
+        }
+        &.back{
+          left: 0;
+        }
+      }
       &.dark{
         .ContributionCalendar-day[data-level="0"]{
           opacity: 0.1;
@@ -34,6 +72,87 @@
 <body>
   <div class="ghwrap-container"></div>
   <script type="module">
+    class ScrollControls {
+      constructor(){
+        this.$graphContainer = document.querySelector('.ContributionCalendar > div');
+        this.$back;
+        this.$forward;
+
+        const debouncedInit = FnUtil.debounce(this.init.bind(this), 50);
+        window.addEventListener('resize', () => {
+          debouncedInit();
+        })
+      }
+
+      get needsScroll(){
+        return this.$graphContainer.scrollWidth > this.$graphContainer.clientWidth;
+      }
+
+      get scrollOffset(){
+        return this.needsScroll? this.$graphContainer.scrollLeft: 0;
+      }
+
+      init(){
+        this.hideControls();
+
+        if(this.needsScroll){
+          this.renderControls();
+        } else{
+          this.hideControls();
+        }
+      }
+
+      hideControls(){
+        this.$back?.remove();
+        this.$back = null;
+        this.$forward?.remove();
+        this.$forward = null;
+      }
+
+      renderControls(){
+        if(this.scrollOffset > 0){
+          this.$back = ScrollControls.createBtn('back');
+          this.$graphContainer.append(this.$back);
+        }
+        
+        if(this.scrollOffset < this.$graphContainer.scrollWidth){
+          this.$forward = ScrollControls.createBtn('forward');
+          this.$graphContainer.append(this.$forward);
+        }
+      }
+
+      static createBtn(direction){
+        let $el = document.createElement('div');
+        $el.classList.add('scroll-con');
+        $el.classList.add(`${direction === 'back'?'back':'forward'}`);
+
+        if(direction === 'back'){
+          $el.innerHTML = '❬';
+        } else{
+          $el.innerHTML = '❭';
+        }
+        
+        return $el;
+      }
+    }
+
+    const FnUtil = {
+      debounce: function (func, wait, immediate) {
+        var timeout;
+        return function () {
+          var context = this,
+            args = arguments;
+          var later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+          };
+          var callNow = immediate && !timeout;
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+          if (callNow) func.apply(context, args);
+        };
+      },
+    };
     const BrowserUtil = {
       getURLParam: function(name, uri) {
         uri = uri || window.location.href;
@@ -129,6 +248,9 @@
     if(darkMode){
       $container.classList.add('dark');
     }
+
+    const scrollCon = new ScrollControls();
+    scrollCon.init();
   </script>
 </body>
 </html>
