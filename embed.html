@@ -82,6 +82,10 @@
         window.addEventListener('resize', () => {
           debouncedInit();
         })
+
+        this.$graphContainer.addEventListener('scroll', (e) => {
+          debouncedInit();
+        })
       }
 
       get needsScroll(){
@@ -115,7 +119,7 @@
           this.$graphContainer.append(this.$back);
         }
         
-        if(this.scrollOffset < this.$graphContainer.scrollWidth){
+        if((this.scrollOffset+this.$graphContainer.clientWidth) < this.$graphContainer.scrollWidth){
           this.$forward = ScrollControls.createBtn('forward');
           this.$graphContainer.append(this.$forward);
         }
