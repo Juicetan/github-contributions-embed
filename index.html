@@ -75,54 +75,58 @@
       margin-right: auto;
     }
     .example-wrap{
+      position: relative;
       max-width: 1000px;
       width: 100%;
       padding: 20px;
       box-sizing: border-box;
       margin-left: auto;
       margin-right: auto;
+      .copy-btn{
+        position: absolute;
+        top: 0;
+        right: 0;
+        aspect-ratio: 1;
+        width: 30px;
+        padding: 0;
+        font-size: 18px;
+        background-color: white;
+        border-radius: 4px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        user-select: none;
+        &:hover{
+          background-color: rgb(230, 230, 230);
+        }
+        &:active{
+          background-color: rgb(199, 199, 199);
+        }
+      }
       .code{
         position: relative;
-        overflow: auto;
-        background-color: rgba(255,255,255,0.1);
-        padding: 10px;
-        .copy-btn{
-          position: absolute;
-          top: 0;
-          right: 0;
-          aspect-ratio: 1;
-          width: 30px;
-          padding: 0;
-          font-size: 18px;
-          background-color: white;
-          border-radius: 4px;
-          border: none;
-          outline: none;
-          cursor: pointer;
-          &:hover{
-            background-color: rgb(230, 230, 230);
+        .inner-code{
+          background-color: rgba(255,255,255,0.1);
+          padding: 10px;
+          overflow: auto;
+          pre{
+            margin: 0;
           }
-          &:active{
-            background-color: rgb(199, 199, 199);
+          &::-webkit-scrollbar-track{
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            background-color: #F5F5F5;
           }
-        }
-        pre{
-          margin: 0;
-        }
-        &::-webkit-scrollbar-track{
-          -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-          border-radius: 10px;
-          background-color: #F5F5F5;
-        }
-        &::-webkit-scrollbar-thumb{
-          border-radius: 10px;
-          -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-          background-color: rgb(85,85,85);
-          background-color: rgba(85,85,85,0.25);
-        }
-        &::-webkit-scrollbar{
-          height: 2px;
-          width: 2px;
+          &::-webkit-scrollbar-thumb{
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            background-color: rgb(85,85,85);
+            background-color: rgba(85,85,85,0.25);
+          }
+          &::-webkit-scrollbar{
+            height: 2px;
+            width: 2px;
+          }
         }
       }
       .url-params{
@@ -165,9 +169,11 @@
       </div>
       <div class="code">
         <button class="copy-btn url" data-clipboard-text="&lt;iframe class=&quot;github-embed&quot; src=&quot;https://contributions.okcode.club/embed.html?username={github username}&amp;axis=false&amp;dark=true&quot; frameborder=&quot;0&quot;&gt;&lt;/iframe&gt;" title="Copy HTML">📋</button>
-        <pre>
+        <div class="inner-code">
+          <pre>
 &lt;iframe class="github-embed" src="https://contributions.okcode.club/embed.html?username={github username}&amp;axis=false&amp;dark=true" frameborder="0"&gt;&lt;/iframe&gt;
-        </pre>
+          </pre>
+        </div>
       </div>
       <div class="info">
         <p><strong>1. Style accordingly</strong></p>
@@ -181,7 +187,8 @@
   margin-left: auto;
   margin-right: auto;
 }" title="Copy CSS">📋</button>
-        <pre>
+        <div class="inner-code">
+          <pre>
 .github-embed{
   display: block;
   max-width: 1000px;
@@ -190,7 +197,9 @@
   margin-left: auto;
   margin-right: auto;
 }
-        </pre>
+          </pre>
+
+        </div>
       </div>
       <div class="info url-params">
         <h2>Embed URL Parameters</h2>
