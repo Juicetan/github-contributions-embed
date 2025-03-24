@@ -12,6 +12,36 @@
       background: transparent;
       overflow-y: hidden;
     }
+    @keyframes l2 {
+      to {rotate: 1turn}
+    }
+    .loader-wrap{
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .loader {
+      height: 80px;
+      aspect-ratio: 1;
+      padding: 10px;
+      border-radius: 50%;
+      box-sizing: border-box;
+      position: relative;
+      mask: conic-gradient(#FFF 0 0) content-box exclude,conic-gradient(#FFF 0 0);
+      filter: blur(12px);
+      &:before{
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-conic-gradient(#FFF 0 5%,#23853d,#FFF 20% 50%);
+        animation: l2 1.5s linear infinite;
+      }
+    }
     .ContributionCalendar{
       > div{
         padding: 0 20px;
@@ -34,6 +64,7 @@
     }
     .ghwrap-container{
       position: relative;
+      min-height: 109px;
       .scroll-con{
         position: absolute;
         top: 0;
@@ -65,12 +96,22 @@
         .ContributionCalendar-day[data-level="0"]{
           opacity: 0.1;
         }
+        .loader{
+          mask: conic-gradient(#000 0 0) content-box exclude,conic-gradient(#000 0 0);
+          &:before{
+            background: repeating-conic-gradient(#000 0 5%,#30a14e,#000 20% 50%);
+          }
+        }
       }
     }
   </style>
 </head>
 <body>
-  <div class="ghwrap-container"></div>
+  <div class="ghwrap-container">
+    <div class="loader-wrap">
+      <div class="loader"></div>
+    </div>
+  </div>
   <script type="module">
     class ScrollControls {
       static createBtn(direction){
@@ -164,7 +205,7 @@
           const pos = elem.getBoundingClientRect();
           return pos.x >= this.$graphContainer.clientWidth;
         });
-        
+
         firstOutside?.scrollIntoView({
           behavior: 'smooth',
           inline: 'start'
@@ -265,13 +306,19 @@
         queryEl.hidePopover();
       });
     }
-
+    
+    
     const url = `https://contributions.okcode.club/contributions.php?username=${BrowserUtil.getURLParam('username')}`;
     const username = BrowserUtil.getURLParam('username');
     const showAxis = BrowserUtil.getURLParam('axis') ? 
-                     BrowserUtil.getURLParam('axis').toLowerCase() === 'true' : true;
+    BrowserUtil.getURLParam('axis').toLowerCase() === 'true' : true;
     const $container = document.querySelector('.ghwrap-container');
-
+    
+    const darkMode = BrowserUtil.getURLParam('dark') === 'true';
+    if(darkMode){
+      $container.classList.add('dark');
+    }
+    
     const graphHTMLStr = await API.getGraphHTMLStr();
     $container.innerHTML = graphHTMLStr;
 
@@ -280,10 +327,6 @@
       $calDay.addEventListener('mouseout', hideTooltip);
     });
 
-    const darkMode = BrowserUtil.getURLParam('dark') === 'true';
-    if(darkMode){
-      $container.classList.add('dark');
-    }
 
     const scrollCon = new ScrollControls();
     scrollCon.init();
