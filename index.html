@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Embed GitHub Contributions</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <style>
     html,body{
       margin: 0;
@@ -81,9 +82,30 @@
       margin-left: auto;
       margin-right: auto;
       .code{
+        position: relative;
         overflow: auto;
         background-color: rgba(255,255,255,0.1);
         padding: 10px;
+        .copy-btn{
+          position: absolute;
+          top: 0;
+          right: 0;
+          aspect-ratio: 1;
+          width: 30px;
+          padding: 0;
+          font-size: 18px;
+          background-color: white;
+          border-radius: 4px;
+          border: none;
+          outline: none;
+          cursor: pointer;
+          &:hover{
+            background-color: rgb(230, 230, 230);
+          }
+          &:active{
+            background-color: rgb(199, 199, 199);
+          }
+        }
         pre{
           margin: 0;
         }
@@ -142,6 +164,7 @@
         <p><strong>1. Embed Iframe</strong></p>
       </div>
       <div class="code">
+        <button class="copy-btn url" data-clipboard-text="&lt;iframe class=&quot;github-embed&quot; src=&quot;https://contributions.okcode.club/embed.html?username={github username}&amp;axis=false&amp;dark=true&quot; frameborder=&quot;0&quot;&gt;&lt;/iframe&gt;" title="Copy HTML">📋</button>
         <pre>
 &lt;iframe class="github-embed" src="https://contributions.okcode.club/embed.html?username={github username}&amp;axis=false&amp;dark=true" frameborder="0"&gt;&lt;/iframe&gt;
         </pre>
@@ -150,6 +173,14 @@
         <p><strong>1. Style accordingly</strong></p>
       </div>
       <div class="code">
+        <button class="copy-btn css" data-clipboard-text=".github-embed{
+  display: block;
+  max-width: 1000px;
+  height: 109px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}" title="Copy CSS">📋</button>
         <pre>
 .github-embed{
   display: block;
@@ -188,5 +219,30 @@
       </div>
     </div>
   </div>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script>
+    const htmlCopy = new ClipboardJS('.copy-btn.url');
+    htmlCopy.on('success', () => {
+      Toastify({
+        text: 'Copied HTML',
+        gravity: 'bottom',
+        duration: 3000,
+        stopOnFocus: true,
+        close: true
+      }).showToast();
+    })
+    
+    const cssCopy = new ClipboardJS('.copy-btn.css');
+    cssCopy.on('success', () => {
+      Toastify({
+        text: 'Copied CSS',
+        gravity: 'bottom',
+        duration: 3000,
+        stopOnFocus: true,
+        close: true
+      }).showToast();
+    })
+  </script>
 </body>
 </html>
