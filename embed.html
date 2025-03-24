@@ -73,6 +73,20 @@
   <div class="ghwrap-container"></div>
   <script type="module">
     class ScrollControls {
+      static createBtn(direction){
+        let $el = document.createElement('div');
+        $el.classList.add('scroll-con');
+        $el.classList.add(`${direction === 'back'?'back':'forward'}`);
+
+        if(direction === 'back'){
+          $el.innerHTML = '❬';
+        } else{
+          $el.innerHTML = '❭';
+        }
+        
+        return $el;
+      }
+
       constructor(){
         this.$graphContainer = document.querySelector('.ContributionCalendar > div');
         this.$back;
@@ -116,27 +130,45 @@
       renderControls(){
         if(this.scrollOffset > 0){
           this.$back = ScrollControls.createBtn('back');
+          this.$back.addEventListener('click', () => {
+            this.scrollBack();
+          });
           this.$graphContainer.append(this.$back);
         }
         
         if((this.scrollOffset+this.$graphContainer.clientWidth) < this.$graphContainer.scrollWidth){
           this.$forward = ScrollControls.createBtn('forward');
+          this.$forward.addEventListener('click', () => {
+            this.scrollForward();
+          });
           this.$graphContainer.append(this.$forward);
         }
       }
 
-      static createBtn(direction){
-        let $el = document.createElement('div');
-        $el.classList.add('scroll-con');
-        $el.classList.add(`${direction === 'back'?'back':'forward'}`);
-
-        if(direction === 'back'){
-          $el.innerHTML = '❬';
-        } else{
-          $el.innerHTML = '❭';
-        }
+      scrollBack(){
+        const cells = Array.from(document.querySelectorAll('td'));
+        const firstOutside = cells.find((elem) => {
+          const pos = elem.getBoundingClientRect();
+          return pos.x <= 0;
+        });
         
-        return $el;
+        firstOutside?.scrollIntoView({
+          behavior: 'smooth',
+          inline: 'end'
+        })
+      }
+      
+      scrollForward(){
+        const cells = Array.from(document.querySelectorAll('td'));
+        const firstOutside = cells.find((elem) => {
+          const pos = elem.getBoundingClientRect();
+          return pos.x >= this.$graphContainer.clientWidth;
+        });
+        
+        firstOutside?.scrollIntoView({
+          behavior: 'smooth',
+          inline: 'start'
+        })
       }
     }
 
